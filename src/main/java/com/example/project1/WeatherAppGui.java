@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -110,6 +111,38 @@ public class WeatherAppGui extends Application {
 
                     resultsStage.setTitle("Results ");
                     resultsStage.setScene(resultsScene);
+                    // Inside the button.setOnAction(event -> { ... }
+                    ImageView icon1 = createIconView("src\\icons\\temperature.png");
+                    ImageView icon2 = createIconView("src\\icons\\humidity.png");
+                    ImageView icon3 = createIconView("src\\icons\\wind.png");
+
+// Add icons to a horizontal box
+                    HBox iconBox = new HBox(20);
+                    iconBox.setAlignment(Pos.CENTER);
+                    iconBox.setPadding(new Insets(30));
+                    iconBox.getChildren().addAll(icon1, icon2, icon3);
+
+// Add the icon box to the results pane
+                    resultsPane.add(iconBox, 0, 3, 2, 1);
+
+                    Button backButton = new Button("Back");
+                    resultsPane.add(backButton, 0, 3, 2, 1);
+
+
+// Event for the back button
+
+                    backButton.setOnAction(e -> {
+                        // Close the results stage
+                        resultsStage.close();
+
+                        // Show the main stage
+                        primaryStage.show();
+                    });
+                    // Inside the button.setOnAction(event -> { ... });
+// Create icon views
+
+
+
 
 // Show the results stage
                     resultsStage.show();
@@ -118,6 +151,8 @@ public class WeatherAppGui extends Application {
                     primaryStage.close();
 
                 });
+
+
 
                 // Add the image and button to the GridPane
                 root.add(imageView, col, row);
@@ -139,6 +174,13 @@ public class WeatherAppGui extends Application {
         primaryStage.setTitle("Welcome to our weather app!");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    private ImageView createIconView(String iconFileDirectory) {
+        Image icon = new Image(new File(iconFileDirectory).toURI().toString()); // In JavaFX, the Image class's constructor accepts either a direct URL string, an InputStream, or a file path.
+        ImageView iconView = new ImageView(icon);
+        iconView.setFitWidth(50); // Set the width as needed
+        iconView.setFitHeight(50); // Set the height as needed
+        return iconView;
     }
 
     public static void main(String[] args) {
