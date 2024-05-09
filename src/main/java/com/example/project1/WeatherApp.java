@@ -1,6 +1,8 @@
-/* 
-Version 1.1 - Basic Weather Data Retrieval
-This version focuses solely on retrieving basic weather data based on a location name.
+/*
+Version 1.2 - Error Handling Improvement
+Here's the summary of changes:
+1. Added Error Handling for Location Data Retrieval
+2. Improved Error Handling for API Connection
 */
 package com.example.project1;
 import org.json.simple.JSONArray;
@@ -17,6 +19,10 @@ import java.util.Scanner;
 public class WeatherApp {
     public static JSONObject getWeatherData(String locationName) {
         JSONArray locationData = getLocationData(locationName);
+        if (locationData == null) {
+            return null; // *** Error handling: Unable to retrieve location data
+        }
+
         JSONObject location = (JSONObject) locationData.get(0);
         double latitude = (double) location.get("latitude");
         double longitude = (double) location.get("longitude");
@@ -30,7 +36,7 @@ public class WeatherApp {
 
             if (conn.getResponseCode() != 200) {
                 System.out.println("Error: Could not connect to API");
-                return null;
+                return null; // *** Error handling: API connection failed
             }
 
             StringBuilder resultJson = new StringBuilder();
@@ -68,6 +74,8 @@ public class WeatherApp {
         }
         return null;
     }
+
+    // *** Other methods remain unchanged...
 
     private static JSONArray getLocationData(String locationName) {
         locationName = locationName.replaceAll(" ", "+");
