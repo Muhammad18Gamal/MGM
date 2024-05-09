@@ -1,11 +1,8 @@
 /*
-Version 1.3 - Modularity Enhancement
-In this version, we've enhanced modularity by refactoring the code into smaller, more focused methods. 
-Here's a summary of changes:
-1. Introduced buildApiRequestUrl Method
-2. Introduced parseJsonString Method
-3. Introduced extractValue Method
- */
+Version 1.4 - User Interface Integration
+In this version, we've integrated a simple user interface by adding a new method displayWeatherData to the WeatherApp class. 
+This method takes the retrieved weather data as input and displays it in a user-friendly format. 
+*/
 package com.example.project1;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,9 +17,10 @@ import java.util.Scanner;
 
 public class WeatherApp {
     public static JSONObject getWeatherData(String locationName) {
+        // Implementation remains unchanged...
         JSONArray locationData = getLocationData(locationName);
         if (locationData == null) {
-            return null;
+            return null; // Error handling: Unable to retrieve location data
         }
 
         JSONObject location = (JSONObject) locationData.get(0);
@@ -34,7 +32,7 @@ public class WeatherApp {
         try {
             String resultJsonString = String.valueOf(fetchApiResponse(urlString));
             if (resultJsonString == null) {
-                return null;
+                return null; // *** Error handling: API connection failed
             }
 
             JSONObject resultJsonObj = parseJsonString(resultJsonString);
@@ -58,8 +56,26 @@ public class WeatherApp {
         return null;
     }
 
+    // New method to display weather data
+    public static void displayWeatherData(JSONObject weatherData) {
+        if (weatherData == null) {
+            System.out.println("Unable to retrieve weather data.");
+            return;
+        }
+
+        double temperature = (double) weatherData.get("temperature");
+        long humidity = (long) weatherData.get("humidity");
+        double windspeed = (double) weatherData.get("windspeed");
+
+        System.out.println("Weather Information:");
+        System.out.println("Temperature: " + temperature + " C");
+        System.out.println("Humidity: " + humidity + " %");
+        System.out.println("Windspeed: " + windspeed + " m/s");
+    }
+
+    // Other methods remain unchanged...
+
     private static JSONArray getLocationData(String locationName) {
-        // Implementation here remains unchanged...
         locationName = locationName.replaceAll(" ", "+");
         String urlString = "https://geocoding-api.open-meteo.com/v1/search?name=" +
                 locationName + "&count=10&language=en&format=json";
@@ -97,7 +113,6 @@ public class WeatherApp {
     }
 
     private static HttpURLConnection fetchApiResponse(String urlString) {
-        // Implementation remains unchanged...
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -122,7 +137,6 @@ public class WeatherApp {
 
 
     private static int findIndexOfCurrentTime(JSONArray timeList) {
-        // Implementation remains unchanged...
         String currentTime = getCurrentTime();
         for (int i = 0; i < timeList.size(); i++) {
             String time = (String) timeList.get(i);
