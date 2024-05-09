@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -34,6 +31,8 @@ public class WeatherAppGui extends Application {
             "Kafr El Sheikh", "Luxor", "Matruh", "Minya", "Monufia", "New Valley",
             "Sinai", "Port Said", "Qalyubia", "Qena", "Red Sea", "Sharqia", "Sohag", "South Sinai", "suez"
     };
+    private boolean isCelsiusSelected = true; // Default temperature unit is Celsius
+
     @Override
     public void start(Stage primaryStage) throws IOException {
 
@@ -48,6 +47,23 @@ public class WeatherAppGui extends Application {
         TextField searchField = new TextField();
         searchField.setPromptText("Search Governorate");
         root.add(searchField, 0, 0, IMAGES_PER_ROW, 1);
+        // Add temperature unit selection
+        ToggleGroup temperatureGroup = new ToggleGroup();
+
+        RadioButton celsiusButton = new RadioButton("Celsius");
+        RadioButton fahrenheitButton = new RadioButton("Fahrenheit");
+        celsiusButton.setToggleGroup(temperatureGroup);
+        fahrenheitButton.setToggleGroup(temperatureGroup);
+
+        celsiusButton.setSelected(true); // Default to Celsius
+        HBox temperatureBox = new HBox(celsiusButton, fahrenheitButton);
+        temperatureBox.setAlignment(Pos.CENTER);
+
+        celsiusButton.setOnAction(event -> isCelsiusSelected = true);
+        fahrenheitButton.setOnAction(event -> isCelsiusSelected = false);
+
+        root.add(temperatureBox, 0, 2, IMAGES_PER_ROW, 1);
+
 
         List<Button> buttons = new ArrayList<>();
         List<ImageView> images = new ArrayList<>();
@@ -60,7 +76,7 @@ public class WeatherAppGui extends Application {
         // Load all images from the directory
         File[] imageFiles = imagesDirectory.listFiles();
         if (imageFiles != null) {
-            int row = 1;
+            int row = 5;
             int col = 0;
 
             for (int i = 0; i< GOVERNORATES.length; i++) {
@@ -125,22 +141,30 @@ public class WeatherAppGui extends Application {
 
 
 
-                   new Thread(()-> {
-                        double temperature = (double) weatherData.get("temperature");
-                        temperatureField.setText(temperature + " C");
-                       try {
-                           sleep(10);
-                       } catch (InterruptedException e) {
-                           throw new RuntimeException(e);
-                       }
-                   }
-                   ).start();
+                    new Thread(() -> {
+                        double temperature;
+                        if (isCelsiusSelected) {
+                            temperature = (double) weatherData.get("temperature");
+                            temperatureField.setText(temperature + " C");
+                        } else {
+                            temperature = (double) weatherData.get("temperature");
+                            temperature = (temperature * 9 / 5) + 32; // Convert Celsius to Fahrenheit
+                            temperatureField.setText(temperature + " F");
+                        }
+                        try {
+                            sleep(10);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).start();
 
 
 
 
 
-                            long humidity = (long) weatherData.get("humidity");
+
+
+                    long humidity = (long) weatherData.get("humidity");
                             humidityField.setText(humidity + " %");
 
                     double windspeed = (double) weatherData.get("windspeed");
