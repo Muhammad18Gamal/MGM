@@ -58,6 +58,15 @@ public class WeatherAppGui extends Application {
                 button.setOnAction(event -> {
                     // Inside the button.setOnAction(event -> { ... });
 // Create a new scene for results
+                    Stage resultsStage = new Stage();
+                    String currentGovernoratee = ((Button) event.getSource()).getText();
+
+                    JSONObject weatherData = WeatherApp.getWeatherData(currentGovernoratee);
+
+                    double temperature = (double) weatherData.get("temperature");
+                    long humidity = (long) weatherData.get("humidity");
+                    double windspeed = (double) weatherData.get("windspeed");
+
                     GridPane resultsPane = new GridPane();
                     resultsPane.setAlignment(Pos.CENTER);
                     resultsPane.setHgap(10);
@@ -84,6 +93,10 @@ public class WeatherAppGui extends Application {
                     TextField windField = new TextField();
                     windField.setEditable(false);
 
+                    temperatureField.setText(temperature + " C");
+                    humidityField.setText(humidity + " %");
+                    windField.setText(windspeed + " ");
+
 // Add components to results pane
                     resultsPane.add(temperatureLabel, 0, 0);
                     resultsPane.add(humidityLabel, 0, 1);
@@ -94,7 +107,7 @@ public class WeatherAppGui extends Application {
 
                     Scene resultsScene = new Scene(resultsPane, 800, 600);
 
-                    Stage resultsStage = new Stage();
+
                     resultsStage.setTitle("Results ");
                     resultsStage.setScene(resultsScene);
 
