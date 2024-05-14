@@ -2,6 +2,7 @@ package com.example.project1;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -106,6 +107,16 @@ public class WeatherAppGui extends Application {
                     resultsPane.setVgap(10);
                     resultsPane.setPadding(new Insets(10));
 
+                    ToggleButton darkModeToggle = new ToggleButton("Dark Mode");
+                    darkModeToggle.setStyle("-fx-base: #333; -fx-text-fill: white;");
+                    darkModeToggle.setOnAction(e -> {
+                        if (darkModeToggle.isSelected()) {
+                            resultsPane.setStyle("-fx-background-color: linear-gradient(to right bottom, #333333, #666666);");
+                        } else {
+                            resultsPane.setStyle("-fx-background-color: linear-gradient(to right bottom, #dd5e89, #f7bb97);");
+                        }
+                    });
+
                     resultsPane.setStyle("-fx-background-color: linear-gradient(to right bottom,#dd5e89,#f7bb97)");
                     Label temperatureLabel = new Label("Temperature:");
                     temperatureLabel.setFont(Font.font("Times New Roman",  30));;
@@ -179,6 +190,8 @@ public class WeatherAppGui extends Application {
                     resultsPane.add(humidityField, 1, 1);
                     resultsPane.add(windField, 1, 2);
                     resultsPane.add(b,0,3,2,1);
+                    resultsPane.add(darkModeToggle, 0, 5, 2, 1);
+                    GridPane.setHalignment(darkModeToggle, HPos.CENTER);
 //one stage may contain multiple scenes , but only one scene may be shown at a time , one scene can contain multiple panes simultaneously .
 
 
@@ -267,8 +280,8 @@ public class WeatherAppGui extends Application {
     private ImageView createIconView(String iconFileDirectory) {
         Image icon = new Image(new File(iconFileDirectory).toURI().toString()); // In JavaFX, the Image class's constructor accepts either a direct URL string, an InputStream, or a file path.
         ImageView iconView = new ImageView(icon);
-        iconView.setFitWidth(50); // Set the width as needed
-        iconView.setFitHeight(50); // Set the height as needed
+        iconView.setFitWidth(50);
+        iconView.setFitHeight(50);
         return iconView;
     }
 
